@@ -21,7 +21,7 @@ class QueueService:
     def __init__(self):
         self.connection = get_rabbitmq_connection()
         self.channel = self.connection.channel()
-        self.channel.queue_declare(queue=settings.rabbitmq_queue, durable=True)
+        self.channel.queue_declare(queue=settings.rabbitmq_ffmpeg_extractor_queue, durable=True)
         
     def publish_video_task(self, video_id: str, video_path: str):
         message = {
@@ -31,10 +31,10 @@ class QueueService:
         
         self.channel.basic_publish(
             exchange="",
-            routing_key=settings.rabbitmq_queue,
+            routing_key=settings.rabbitmq_ffmpeg_extractor_queue,
             body=json.dumps(message),
             properties=pika.BasicProperties(
-                delivery_mode=2
+                delivery_mode=pika.DeliveryMode.Persistent
             )
         )
         logger.info(f"Published task for video {video_id}")

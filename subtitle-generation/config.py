@@ -1,17 +1,12 @@
 from pydantic_settings import BaseSettings
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-STORAGE_DIR = BASE_DIR / "storage"
-STORAGE_DIR.mkdir(exist_ok=True)
 
 class Settings(BaseSettings):
     rabbitmq_host: str = "localhost"
     rabbitmq_port: int = 5672
     rabbitmq_user: str = "guest"
     rabbitmq_pass: str = "guest"
-    rabbitmq_ffmpeg_extractor_queue: str = "ffmpeg_extractor_queue"
-    
+    rabbitmq_whisper_queue: str = "whisper_transcription_queue"
+
     redis_host: str = "localhost"
     redis_port: int = 6379
     redis_db: int = 0
@@ -19,13 +14,9 @@ class Settings(BaseSettings):
     mongodb_host: str = "localhost"
     mongodb_port: int = 27017
     mongodb_db: str = "video_subtitles"
-    mongo_collection: str = "subtitles"
-    
-    storage_path: str = str(STORAGE_DIR)
-    max_file_size: int = 500 * 1024 * 1024
-    allowed_extension: set = {".mov", ".mp4", ".mkv", ".mp3"}
+    mongodb_collection: str = "subtitles"
     
     class Config:
         env_file = ".env"
-
+        
 settings = Settings()
